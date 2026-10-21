@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:16
+    container_name: facebook-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: facebook
+    ports:
+      - "5432:5432"
+    volumes:
+      # Executado automaticamente só na primeira vez (volume vazio)
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+      - facebook-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d facebook"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  facebook-data:

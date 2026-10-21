@@ -1,0 +1,8 @@
+target/
+.DS_Store
+__MACOSX/
+.settings/
+.classpath
+.project
+*.iml
+.idea/
