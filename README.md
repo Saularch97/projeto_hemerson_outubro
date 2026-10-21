@@ -35,14 +35,34 @@ Para parar: `Ctrl+C` na aplicação e `docker compose stop` no banco. Para zerar
 
 ## Modelo do banco
 
-```
-users (id, nome, sexo, email, password)
-  ▲ 1
-  │ N
-posts (id, content, post_date, user_id → users.id)
-  ▲ 1
-  │ N
-comments (id, content, comment_date, post_id → posts.id, user_id → users.id)
+```mermaid
+erDiagram
+    users ||--o{ posts : "publica"
+    users ||--o{ comments : "escreve"
+    posts ||--o{ comments : "recebe"
+
+    users {
+        serial id PK
+        varchar nome
+        char sexo
+        varchar email UK
+        varchar password
+    }
+
+    posts {
+        serial id PK
+        varchar content
+        date post_date
+        int user_id FK
+    }
+
+    comments {
+        serial id PK
+        varchar content
+        date comment_date
+        int post_id FK
+        int user_id FK
+    }
 ```
 
 As chaves estrangeiras usam `ON DELETE CASCADE`: excluir um usuário remove os posts e comentários dele; excluir um post remove os comentários do post.
